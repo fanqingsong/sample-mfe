@@ -29,9 +29,9 @@
 product-feat 暴露的是路由：
 
 ```js
-// fe-apps/projects/product-feat/webpack.config.js
+// fe-apps/apps/product-feat/webpack.config.js
 exposes: {
-  './routes': './projects/product-feat/src/app/modules/modules.routes.ts',
+  './routes': './apps/product-feat/src/app/modules/modules.routes.ts',
 }
 ```
 
@@ -83,7 +83,7 @@ product（路由式）—— 出现在 `getDynamicRoutes()` 生成的 `lazyRoute
 order（Web Component 式）—— 在 `modules.routes.ts` 里**单独写死**，不在后端配置中：
 
 ```ts
-// fe-apps/projects/host/src/app/modules/modules.routes.ts
+// fe-apps/apps/host/src/app/modules/modules.routes.ts
 {
   path: 'orders',
   component: WebComponentWrapper,
@@ -124,10 +124,10 @@ order-feat 用的是 `ngx-build-plus` 而非 `@angular-builders/custom-webpack`�
 
 | 用途 | 路径 |
 |------|------|
-| product-feat MF 配置 | `fe-apps/projects/product-feat/webpack.config.js` |
-| product-feat 暴露的路由 | `fe-apps/projects/product-feat/src/app/modules/modules.routes.ts` |
+| product-feat MF 配置 | `fe-apps/apps/product-feat/webpack.config.js` |
+| product-feat 暴露的路由 | `fe-apps/apps/product-feat/src/app/modules/modules.routes.ts` |
 | order-feat MF 配置 | `fe-app-order-feat/webpack.config.js` |
 | order-feat 自定义元素注册 | `fe-app-order-feat/src/app/app.module.ts` |
 | order-feat bootstrap | `fe-app-order-feat/src/bootstrap.ts` |
-| Host 加载 order（WebComponentWrapper） | `fe-apps/projects/host/src/app/modules/modules.routes.ts` |
-| Host 加载 product（loadRemoteModule） | `fe-apps/projects/host/src/app/modules/modules.routes.ts`（`getDynamicRoutes`） |
+| Host 加载 order（WebComponentWrapper） | `fe-apps/apps/host/src/app/modules/modules.routes.ts` |
+| Host 加载 product（loadRemoteModule） | `fe-apps/apps/host/src/app/modules/modules.routes.ts`（`getDynamicRoutes`） |

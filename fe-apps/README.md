@@ -1,59 +1,36 @@
-# FeApp
+# FeApp (Nx + Angular Module Federation)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.7.
+Angular 19 monorepo managed by **Nx**. Apps live under `apps/` with per-project `project.json`.
 
-## Development server
+## Commands
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+npm run start:host      # nx serve host       (4200)
+npm run start:user      # nx serve user-feat  (4101)
+npm run start:product   # nx serve product-feat (4102)
+npm run all             # MF dev server (all remotes)
+npm run build:all       # nx run-many -t build
+npx nx graph            # project graph
+```
 
-## Code scaffolding
+## Structure
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+apps/
+  host/           # shell / host
+  user-feat/      # remote
+  product-feat/   # remote
+libs/             # shared libs (empty placeholder)
+nx.json
+tsconfig.base.json
+```
 
-## Build
+## Module Federation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Still uses `@angular-architects/module-federation` + `@angular-builders/custom-webpack`.
+Nx migration skipped auto-rewriting those builders; targets were kept and paths updated to `apps/`.
 
-## Running unit tests
+## Note on order-feat
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-## How to run
-
-## Start Host App
-
-Run `npm start:host` to start the host project
-
-## Start User Feature App
-
-Run `npm start:user` to start the user feat project
-
-## Setup Module Federation Guide
-
-### Install Angular architect - module federation with webpack
-
-`npm i @angular-architects/module-federation`
-
-### Add Host App to module federation setup with port 4200
-
-`ng add @angular-architects/module-federation --project host --type host --port 4200`
-
-### Add User Feature app to module federation setup with port 4101
-
-`ng add @angular-architects/module-federation --project user-feat --type remote --port 4101`
-
-### Add Product Feature app to module federation setup with port 4102
-
-`ng add @angular-architects/module-federation --project product-feat --type remote --port 4102`
-
-## References
-
-[Module Federation with Angular&#39;s Standalone Components](https://www.angulararchitects.io/en/blog/module-federation-with-angulars-standalone-components/)
+`fe-app-order-feat` stays a separate Angular 16 workspace (Web Component remote).
+`@nx/angular` currently targets Angular >= 19, so it is not imported into this Nx workspace.

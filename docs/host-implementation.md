@@ -41,10 +41,10 @@ sequenceDiagram
 
 ## 2. 目录结构
 
-根路径：`fe-apps/projects/host`
+根路径：`fe-apps/apps/host`
 
 ```
-projects/host/
+apps/host/
 ├── webpack.config.js                 # Module Federation（不写死 remotes）
 ├── webpack.prod.config.js
 ├── src/
@@ -68,7 +68,7 @@ projects/host/
 │               └── not-found/
 ```
 
-在 `fe-apps/angular.json` 中，Host 使用 `@angular-builders/custom-webpack:browser`，挂载 `webpack.config.js`；本地开发端口 **4200**，`commonChunk: false`（Module Federation 常见设置）。
+在 `fe-apps/apps/host/project.json` 中，Host 使用 `@angular-builders/custom-webpack:browser`，挂载 `webpack.config.js`；本地开发端口 **4200**，`commonChunk: false`（Module Federation 常见设置）。
 
 ---
 
@@ -77,7 +77,7 @@ projects/host/
 ### 3.1 Host：运行时动态 remotes
 
 ```js
-// fe-apps/projects/host/webpack.config.js
+// fe-apps/apps/host/webpack.config.js
 const { shareAll, withModuleFederationPlugin } = require('@angular-architects/module-federation/webpack');
 
 module.exports = withModuleFederationPlugin({
@@ -99,7 +99,7 @@ module.exports = withModuleFederationPlugin({
 
 ```js
 exposes: {
-  './routes': './projects/user-feat/src/app/modules/modules.routes.ts',
+  './routes': './apps/user-feat/src/app/modules/modules.routes.ts',
 }
 ```
 
@@ -138,7 +138,7 @@ export const routes: Routes = [
 ### 4.2 APP_INITIALIZER 重置整套路由
 
 ```ts
-// fe-apps/projects/host/src/app/app.config.ts
+// fe-apps/apps/host/src/app/app.config.ts
 {
   provide: APP_INITIALIZER,
   useFactory: (dynamicRoutesService: DynamicRoutesService, router: Router) => async () => {
@@ -171,7 +171,7 @@ API 地址：
 ### 4.4 getDynamicRoutes + loadRemoteModule
 
 ```ts
-// fe-apps/projects/host/src/app/modules/modules.routes.ts（核心逻辑）
+// fe-apps/apps/host/src/app/modules/modules.routes.ts（核心逻辑）
 lazyRoutes = Object.keys(options).map((key) => {
   const entry = options[key];
   return {
@@ -226,7 +226,7 @@ Docker 中通过环境变量注入同源路径：
 ## 5. 配置模型
 
 ```ts
-// fe-apps/projects/host/src/app/modules/models/mfe-config.ts
+// fe-apps/apps/host/src/app/modules/models/mfe-config.ts
 export type CustomRemoteConfig = RemoteConfig & {
   type: 'module';
   exposedModule: string;
@@ -335,14 +335,14 @@ Host 构建参数（`docker-compose.yml`）：
 
 | 用途 | 路径 |
 |------|------|
-| MF Webpack | `fe-apps/projects/host/webpack.config.js` |
-| 启动配置 / APP_INITIALIZER | `fe-apps/projects/host/src/app/app.config.ts` |
-| 动态路由服务 | `fe-apps/projects/host/src/app/modules/services/dynamic-routes.service.ts` |
-| 路由 + loadRemoteModule | `fe-apps/projects/host/src/app/modules/modules.routes.ts` |
-| 类型模型 | `fe-apps/projects/host/src/app/modules/models/mfe-config.ts` |
-| Shell UI | `fe-apps/projects/host/src/app/modules/modules.component.html` |
-| Feature 管理 | `fe-apps/projects/host/src/app/modules/pages/home/` |
-| 环境变量 | `fe-apps/projects/host/src/environments/` |
+| MF Webpack | `fe-apps/apps/host/webpack.config.js` |
+| 启动配置 / APP_INITIALIZER | `fe-apps/apps/host/src/app/app.config.ts` |
+| 动态路由服务 | `fe-apps/apps/host/src/app/modules/services/dynamic-routes.service.ts` |
+| 路由 + loadRemoteModule | `fe-apps/apps/host/src/app/modules/modules.routes.ts` |
+| 类型模型 | `fe-apps/apps/host/src/app/modules/models/mfe-config.ts` |
+| Shell UI | `fe-apps/apps/host/src/app/modules/modules.component.html` |
+| Feature 管理 | `fe-apps/apps/host/src/app/modules/pages/home/` |
+| 环境变量 | `fe-apps/apps/host/src/environments/` |
 | 后端 API | `be-apps/src/index.ts` |
 | Docker 编排 | `docker-compose.yml` |
 | 网关 | `docker/gateway/nginx.conf` |

@@ -40,7 +40,7 @@
 | 远程(演示) | Angular + Angular Elements             | 16.2          | 演示跨版本 + Web Component 集成   |
 | 后端配置   | Hono.js + @hono/node-server            | ^4            | 极简高性能边缘框架                |
 | Mock       | MSW (Mock Service Worker)              | ^2            | 浏览器层 API 模拟                 |
-| 构建       | Webpack (custom via @angular-builders) | -             | 支持 MF 插件                      |
+| 构建       | Nx + Webpack (custom-webpack)          | 23            | 任务缓存 / MF 插件                |
 
 ---
 
@@ -53,11 +53,12 @@ sample-mfe/
 ├── be-apps/                    # 后端配置服务 (Hono)
 │   └── src/index.ts            # 提供 GET/POST/DELETE /routes
 │
-├── fe-apps/                    # Angular 19 工作区 (Monorepo)
-│   ├── angular.json
+├── fe-apps/                    # Angular 19 + Nx 工作区 (Monorepo)
+│   ├── nx.json
 │   ├── package.json
-│   └── projects/
+│   └── apps/
 │       ├── host/               # 宿主 Shell (4200)
+│       │   ├── project.json
 │       │   ├── src/app/
 │       │   │   ├── app.config.ts          # APP_INITIALIZER 动态路由
 │       │   │   ├── modules/
@@ -128,9 +129,9 @@ sequenceDiagram
 
 关键代码位置：
 
-- `projects/host/src/app/app.config.ts` — APP_INITIALIZER
-- `projects/host/src/app/modules/services/dynamic-routes.service.ts`
-- `projects/host/src/app/modules/modules.routes.ts` — `getDynamicRoutes()` + `loadRemoteModule()`
+- `apps/host/src/app/app.config.ts` — APP_INITIALIZER
+- `apps/host/src/app/modules/services/dynamic-routes.service.ts`
+- `apps/host/src/app/modules/modules.routes.ts` — `getDynamicRoutes()` + `loadRemoteModule()`
 
 ### 3. Module Federation 配置要点
 
@@ -148,7 +149,7 @@ module.exports = withModuleFederationPlugin({
 
 ```js
 exposes: {
-  './routes': './projects/xxx/src/app/modules/modules.routes.ts'
+  './routes': './apps/xxx/src/app/modules/modules.routes.ts'
 }
 ```
 

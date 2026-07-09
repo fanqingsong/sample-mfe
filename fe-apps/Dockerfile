@@ -6,7 +6,7 @@ ARG NGINX_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.27-al
 FROM ${NODE_IMAGE} AS build
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 
 COPY . .
@@ -17,10 +17,10 @@ ARG ORDER_REMOTE_ENTRY=/mf/order/remoteEntry.js
 ARG PROJECT=host
 
 RUN sed -i "s|API_URL: '/api'|API_URL: '${API_URL}'|g" \
-      projects/host/src/environments/environment.ts \
+      apps/host/src/environments/environment.ts \
  && sed -i "s|ORDER_REMOTE_ENTRY: '/mf/order/remoteEntry.js'|ORDER_REMOTE_ENTRY: '${ORDER_REMOTE_ENTRY}'|g" \
-      projects/host/src/environments/environment.ts \
- && npx ng build "${PROJECT}" --configuration=production --base-href=/
+      apps/host/src/environments/environment.ts \
+ && npx nx build "${PROJECT}" --configuration=production --base-href=/
 
 FROM ${NGINX_IMAGE} AS runtime
 ARG PROJECT=host

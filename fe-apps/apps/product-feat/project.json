@@ -1,0 +1,115 @@
+{
+  "name": "product-feat",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "apps/product-feat/src",
+  "prefix": "app",
+  "targets": {
+    "build": {
+      "executor": "@angular-builders/custom-webpack:browser",
+      "options": {
+        "outputPath": "dist/product-feat",
+        "index": "apps/product-feat/src/index.html",
+        "polyfills": [
+          "zone.js"
+        ],
+        "tsConfig": "apps/product-feat/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/product-feat/public",
+            "output": "."
+          }
+        ],
+        "styles": [
+          "@angular/material/prebuilt-themes/rose-red.css",
+          "apps/product-feat/src/styles.scss"
+        ],
+        "scripts": [],
+        "main": "apps/product-feat/src/main.ts",
+        "customWebpackConfig": {
+          "path": "apps/product-feat/webpack.config.js"
+        },
+        "commonChunk": false
+      },
+      "configurations": {
+        "production": {
+          "baseHref": "product-feat",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kB",
+              "maximumError": "4kB"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "scripts": true,
+            "styles": true,
+            "fonts": false
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-builders/custom-webpack:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "product-feat:build:production"
+        },
+        "development": {
+          "buildTarget": "product-feat:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4102,
+        "publicHost": "http://localhost:4102"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n"
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "polyfills": [
+          "zone.js",
+          "zone.js/testing"
+        ],
+        "tsConfig": "apps/product-feat/tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/product-feat/public"
+          }
+        ],
+        "styles": [
+          "apps/product-feat/src/styles.scss"
+        ],
+        "scripts": []
+      }
+    }
+  }
+}
