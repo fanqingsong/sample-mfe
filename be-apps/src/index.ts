@@ -6,18 +6,23 @@ const app = new Hono()
 
 app.use('/*', cors())
 
-// routes.ts
+const userRemoteEntry =
+  process.env.USER_REMOTE_ENTRY ?? '/mf/user/remoteEntry.js?v=1'
+const productRemoteEntry =
+  process.env.PRODUCT_REMOTE_ENTRY ?? '/mf/product/remoteEntry.js?v=1'
+
 let dynamicRoutes = [
   {
     id: 'users',
     type: 'module',
-    remoteEntry: 'http://localhost:4101/remoteEntry.js?v=1', //<-- can add dynamic param version to clean cache
+    remoteEntry: userRemoteEntry,
     exposedModule: './routes',
     ngModuleName: 'routes',
     displayName: 'Users',
-    routePath: 'users',            
+    routePath: 'users',
   }
 ];
+
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
@@ -26,29 +31,30 @@ app.get('/routes', (c) => {
   return c.json(dynamicRoutes);
 });
 
-app.post('/routes', async (c) => {  
+app.post('/routes', async (c) => {
   if (!dynamicRoutes.some(route => route.id === 'products')) {
-    dynamicRoutes.push( {
+    dynamicRoutes.push({
       id: 'products',
       type: 'module',
-      remoteEntry: 'http://localhost:4102/remoteEntry.js?v=1', //<-- can dynamic param version to clean cache
+      remoteEntry: productRemoteEntry,
       exposedModule: './routes',
       ngModuleName: 'routes',
       displayName: 'Products',
-      routePath: 'products',            
+      routePath: 'products',
     });
   }
   return c.json(dynamicRoutes);
 });
 
-app.delete('/routes', async (c) => {  
+app.delete('/routes', async (c) => {
   dynamicRoutes = dynamicRoutes.filter(route => route.id !== 'products');
-
   return c.json(dynamicRoutes);
 });
 
-const port = 3000
+const port = Number(process.env.PORT ?? 3000)
 console.log(`Server is running on port ${port}`)
+console.log(`USER_REMOTE_ENTRY=${userRemoteEntry}`)
+console.log(`PRODUCT_REMOTE_ENTRY=${productRemoteEntry}`)
 
 serve({
   fetch: app.fetch,

@@ -4,7 +4,8 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { CustomManifest } from './models/mfe-config';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { HomeComponent } from './pages/home/home.component';
-import { startsWith, WebComponentWrapper, WebComponentWrapperOptions } from '@angular-architects/module-federation-tools';
+import { WebComponentWrapper, WebComponentWrapperOptions } from '@angular-architects/module-federation-tools';
+import { environment } from '../../environments/environment';
 
 
 //Module Route Init
@@ -67,7 +68,7 @@ export function getDynamicRoutes(options: CustomManifest | null): Routes {
                     component: WebComponentWrapper,
                     data: {
                         type: 'module',
-                        remoteEntry: 'http://localhost:4103/remoteEntry.js?v=' + Math.random(),
+                        remoteEntry: environment.ORDER_REMOTE_ENTRY + '?v=' + Math.random(),
                         exposedModule: './web-components',
                         elementName: 'fe-app-order-feat'
                     } as WebComponentWrapperOptions

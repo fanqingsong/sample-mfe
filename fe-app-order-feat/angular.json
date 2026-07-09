@@ -39,7 +39,11 @@
 					},
 					"configurations": {
 						"production": {							
-							"optimization": true,							
+							"optimization": {
+								"scripts": true,
+								"styles": true,
+								"fonts": false
+							},							
 							"sourceMap": false,
 							"namedChunks": true,
 							"extractLicenses": true,

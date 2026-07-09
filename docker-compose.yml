@@ -1,0 +1,80 @@
+# Sample MFE - docker compose (with gateway)
+# Usage:
+#   docker compose up --build
+# Then open http://localhost:8080
+#
+# Only the gateway is published. Internal apps stay on the compose network.
+
+services:
+  be-apps:
+    build:
+      context: ./be-apps
+    container_name: sample-mfe-be
+    expose:
+      - "3000"
+    environment:
+      PORT: "3000"
+      # Same-origin paths via gateway (browser-facing)
+      USER_REMOTE_ENTRY: /mf/user/remoteEntry.js?v=1
+      PRODUCT_REMOTE_ENTRY: /mf/product/remoteEntry.js?v=1
+    restart: unless-stopped
+
+  user-feat:
+    build:
+      context: ./fe-apps
+      args:
+        PROJECT: user-feat
+    container_name: sample-mfe-user-feat
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  product-feat:
+    build:
+      context: ./fe-apps
+      args:
+        PROJECT: product-feat
+    container_name: sample-mfe-product-feat
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  order-feat:
+    build:
+      context: ./fe-app-order-feat
+    container_name: sample-mfe-order-feat
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  host:
+    build:
+      context: ./fe-apps
+      args:
+        PROJECT: host
+        API_URL: /api
+        ORDER_REMOTE_ENTRY: /mf/order/remoteEntry.js
+    container_name: sample-mfe-host
+    expose:
+      - "80"
+    depends_on:
+      - be-apps
+      - user-feat
+      - product-feat
+      - order-feat
+    restart: unless-stopped
+
+  gateway:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.27-alpine
+    container_name: sample-mfe-gateway
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - host
+      - user-feat
+      - product-feat
+      - order-feat
+      - be-apps
+    restart: unless-stopped

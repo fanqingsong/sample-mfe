@@ -56,7 +56,12 @@
 									"maximumError": "4kB"
 								}
 							],
-							"outputHashing": "all"
+							"outputHashing": "all",
+							"optimization": {
+								"scripts": true,
+								"styles": true,
+								"fonts": false
+							}
 						},
 						"development": {
 							"optimization": false,
@@ -168,7 +173,12 @@
 									"maximumError": "4kB"
 								}
 							],
-							"outputHashing": "all"
+							"outputHashing": "all",
+							"optimization": {
+								"scripts": true,
+								"styles": true,
+								"fonts": false
+							}
 						},
 						"development": {
 							"buildOptimizer": false,
@@ -258,7 +268,7 @@
 						"scripts": [],
 						"main": "projects/product-feat/src/main.ts",
 						"customWebpackConfig": {
-							"path": "projects/product-feat/webpack.config.ts"
+							"path": "projects/product-feat/webpack.config.js"
 						},
 						"commonChunk": false
 					},
@@ -277,7 +287,12 @@
 									"maximumError": "4kB"
 								}
 							],
-							"outputHashing": "all"
+							"outputHashing": "all",
+							"optimization": {
+								"scripts": true,
+								"styles": true,
+								"fonts": false
+							}
 						},
 						"development": {
 							"buildOptimizer": false,
