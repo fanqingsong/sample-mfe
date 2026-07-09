@@ -96,6 +96,8 @@ sample-mfe/
 
 ### 2. 动态路由加载核心流程
 
+> 更完整的 Host 实现说明（目录结构、配置模型、Docker 接入、注意点）见：[docs/host-implementation.md](docs/host-implementation.md)
+
 这是本项目最核心的创新点：**路由不是写死的**，而是运行时从配置服务获取。
 
 ![动态路由加载流程](docs/diagrams/mfe-dynamic-flow.png)
@@ -157,6 +159,8 @@ exposes: {
 `/orders` 路由使用 `@angular-architects/module-federation-tools` 的 `WebComponentWrapper` 加载 `fe-app-order-feat` 暴露的自定义元素 `<fe-app-order-feat>`。
 
 这展示了**异构技术栈 / 跨 Angular 版本** 集成的可行性。
+
+> 两种远程集成方式的详细对比（路由模块式 vs Web Component 式）见：[docs/remote-feats-comparison.md](docs/remote-feats-comparison.md)
 
 ---
 
