@@ -7,6 +7,7 @@ module.exports = withModuleFederationPlugin({
   },
   shared: {
     ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
+    '@ngrx/store': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   },
 }, {
   // Required when served under a gateway path like /mf/product/

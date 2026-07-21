@@ -8,6 +8,7 @@ module.exports = withModuleFederationPlugin({
 
   shared: {
     ...shareAll({ singleton: false, strictVersion: false, requiredVersion: 'auto' }),
+    '@ngrx/store': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   },
 
 });

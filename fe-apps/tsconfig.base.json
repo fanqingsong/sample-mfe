@@ -13,6 +13,7 @@
     "declaration": false,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
+    "baseUrl": ".",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
@@ -21,7 +22,11 @@
       "ES2022",
       "dom"
     ],
-    "paths": {},
+    "paths": {
+      "@sample-mfe/mfe-communication": [
+        "libs/mfe-communication/src/index.ts"
+      ]
+    },
     "rootDir": "."
   },
   "angularCompilerOptions": {

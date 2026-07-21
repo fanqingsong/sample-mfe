@@ -16,6 +16,39 @@
 
 ![微前端整体架构](docs/diagrams/mfe-architecture.png)
 
+## 什么是 Module Federation（为什么叫“联邦”）
+
+“联邦”不是把所有前端代码合并成一个巨大应用，而是让多个**独立的应用**在遵循共同运行时协议的前提下，组合为一个用户看到的整体。
+
+可以把它类比为联邦制：`host` 是入口和协调者；`user-feat`、`product-feat` 等 Remote 保留各自的开发、构建和发布权；它们通过 `remoteEntry.js` 声明自己可提供的能力，并在用户实际访问时才被 Host 取回和执行。
+
+![Module Federation：独立应用在运行时组合](docs/diagrams/mfe-module-federation.png)
+
+### 从“独立”到“联邦”的关系
+
+```text
+独立交付                         运行时协议                           用户体验
+┌───────────────┐              ┌────────────────┐                 ┌──────────────┐
+│ user-feat     │──暴露──────► │ remoteEntry.js │                 │              │
+│ 独立构建/部署 │              │ ./routes       │──按需加载──────►│ Host 中的    │
+└───────────────┘              └────────────────┘                 │ /users 页面 │
+                                                                     │              │
+┌───────────────┐              ┌────────────────┐                 │ /products 页面│
+│ product-feat  │──暴露──────► │ remoteEntry.js │──按需加载──────►│              │
+│ 独立构建/部署 │              │ ./routes       │                 └──────────────┘
+└───────────────┘
+```
+
+它的关键含义与边界如下：
+
+- **独立性**：每个 Remote 可独立开发、构建、部署和升级；Host 不需要在构建时把所有子应用打入自己的产物。
+- **运行时组合**：Host 使用 `loadRemoteModule()` 读取 Remote 的 `remoteEntry.js`，再取得其暴露的 `./routes`，并将其注册为 Angular 懒加载路由。
+- **模块级集成**：联邦交换的是路由、组件或服务等模块，不是 iframe 中的整页应用。
+- **可共享依赖**：Module Federation 可协商共享 Angular、RxJS 等依赖，避免不必要的重复下载；版本兼容和单例策略需要由团队明确配置。
+- **不是完全隔离**：Remote 最终仍运行在 Host 的同一浏览器页面与 JavaScript 上下文中，因此全局样式、依赖版本和跨应用状态仍需约定治理规则。
+
+本项目将“联邦”的运行时入口进一步配置化：Host 先从 `/api/routes` 取得 Remote 地址和路由，再在用户进入 `/users`、`/products` 时加载对应模块。
+
 ### 端口与服务速览
 
 ![端口与服务概览](docs/diagrams/mfe-ports-overview.png)

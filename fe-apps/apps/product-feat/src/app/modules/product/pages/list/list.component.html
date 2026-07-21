@@ -1,1 +1,8 @@
 <p class="mat-body-medium">Page Product List loaded!</p>
+@if (selectedUser$ | async; as selectedUser) {
+  <p class="mat-body-medium">
+    Selected user from user-feat: {{ selectedUser.name }} ({{ selectedUser.id }})
+  </p>
+} @else {
+  <p class="mat-body-medium">No user has been selected in user-feat.</p>
+}
